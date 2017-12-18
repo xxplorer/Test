@@ -1,0 +1,73 @@
+/* Date : 27 Jun 2012
+   Author : Suparna Pathak
+   Taking input from PIN
+   BlinkLEDs at different Hz without delay
+   Using millis() get timestamp and then multitask.
+   - Make pushbutton
+*/
+
+#define PIN1  4
+#define PIN2  6
+#define PIN_PUSHBUTTON  2
+
+long timeStampCurrent,timeStampLast1, timeStampLast2 = 0;
+bool STATUS_LED1 = 0;
+bool STATUS_LED2 = 0;
+
+#define INTERVAL_LED1   1000
+#define INTERVAL_LED2   1500
+
+//#define LAP             1000  //
+
+void PushButton();
+
+void setup() {
+  // put your setup code here, to run once:
+  pinMode(PIN1, OUTPUT);
+  pinMode(PIN2, OUTPUT);
+  pinMode(PIN_PUSHBUTTON, INPUT);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  // put your main code here, to run repeatedly:
+  timeStampCurrent = millis();
+  Serial.println(timeStampCurrent);
+  Serial.println(timeStampLast1);
+  Serial.println(timeStampLast2);
+
+  //Pin1
+  if(INTERVAL_LED1 < timeStampCurrent - timeStampLast1)
+  {
+     STATUS_LED1 = 1 - STATUS_LED1;
+     digitalWrite(PIN1, STATUS_LED1);
+     timeStampLast1 = timeStampCurrent;     
+  }
+  if(INTERVAL_LED2 < timeStampCurrent - timeStampLast2)
+  {
+     STATUS_LED2 = 1 - STATUS_LED2;
+     digitalWrite(PIN2, STATUS_LED2);
+     timeStampLast2 = timeStampCurrent;     
+  }
+
+  PushButton();
+}
+
+void PushButton()
+{
+   int buttonState = digitalRead(buttonPin);
+
+  // check if the pushbutton is pressed.
+  // if it is, the buttonState is HIGH:
+  if (buttonState == HIGH) {
+    // turn LED on:
+    digitalWrite(ledPin, HIGH);
+  } else {
+    // turn LED off:
+    digitalWrite(ledPin, LOW);
+  }
+  
+}
+}
+
